@@ -80,22 +80,42 @@ function goals(state = [], action) {
   }
 }
 
-// Redux Middleware _____________________________
-function checkAndDispatch(store, action) {
+// Redux middleware ES6
+const checker = store => next => action => {
+  // here we have access to store, next and action
   if (
     action.type === ADD_TODO &&
     action.todo.name.toLowerCase().includes("bitcoin")
   ) {
     return alert("Nope. That's a bad idea.");
   }
+
   if (
     action.type === ADD_GOAL &&
     action.goal.name.toLowerCase().includes("bitcoin")
   ) {
     return alert("Nope. That's a bad idea.");
   }
-  return store.dispatch(action);
-}
+
+  return next(action);
+};
+
+const logger = store => next => action => {
+  console.group(action.type);
+  console.log("The action: ", action);
+  const result = next(action);
+  console.log("The new state: ", store.getState());
+  console.groupEnd();
+};
+
+// ES5 way
+// function checker(store) {
+//   return function(next) {
+//     return function(action) {
+//       "here we have access to store, next and action"
+//     };
+//   };
+// }
 
 //____________________________________________________
 
@@ -103,7 +123,8 @@ const store = Redux.createStore(
   Redux.combineReducers({
     todos,
     goals
-  })
+  }),
+  Redux.applyMiddleware(checker, logger)
 );
 
 store.subscribe(() => {
@@ -125,8 +146,7 @@ function addTodo() {
   const name = input.value;
   input.value = "";
 
-  checkAndDispatch(
-    store,
+  store.dispatch(
     addTodoAction({
       name,
       complete: false,
@@ -140,8 +160,7 @@ function addGoal() {
   const name = input.value;
   input.value = "";
 
-  checkAndDispatch(
-    store,
+  store.dispatch(
     addGoalAction({
       name,
       id: generateId()
@@ -169,7 +188,7 @@ function addTodoToDOM(todo) {
 
   // we call a createRemoveButton
   const removeBtn = createRemoveButton(() => {
-    checkAndDispatch(store, removeTodoAction(todo.id));
+    store.dispatch(removeTodoAction(todo.id));
   });
 
   // append the text to "li" element
@@ -180,7 +199,7 @@ function addTodoToDOM(todo) {
   //line trough styling and event listener when we click on "li" element
   node.style.textDecoration = todo.complete ? "line-through" : "none";
   node.addEventListener("click", () => {
-    checkAndDispatch(store, toggleTodoAction(todo.id));
+    store.dispatch(toggleTodoAction(todo.id));
   });
 
   document.getElementById("todos").appendChild(node);
@@ -192,7 +211,7 @@ function addGoalToDOM(goal) {
   const text = document.createTextNode(goal.name);
 
   const removeBtn = createRemoveButton(() => {
-    checkAndDispatch(store, removeGoalAction(goal.id));
+    store.dispatch(removeGoalAction(goal.id));
   });
 
   node.appendChild(text);
