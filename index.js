@@ -84,18 +84,16 @@ function goals(state = [], action) {
 function checkAndDispatch(store, action) {
   if (
     action.type === ADD_TODO &&
-    action.todo.name.tolowerCase().includes("bitcoin")
+    action.todo.name.toLowerCase().includes("bitcoin")
   ) {
-    return alert("Nope. That is a bad idea.");
+    return alert("Nope. That's a bad idea.");
   }
-
   if (
     action.type === ADD_GOAL &&
-    action.goal.name.tolowerCase().includes("bitcoin")
+    action.goal.name.toLowerCase().includes("bitcoin")
   ) {
-    return alert("Nope. That is a bad idea.");
+    return alert("Nope. That's a bad idea.");
   }
-
   return store.dispatch(action);
 }
 
@@ -127,7 +125,8 @@ function addTodo() {
   const name = input.value;
   input.value = "";
 
-  store.dispatch(
+  checkAndDispatch(
+    store,
     addTodoAction({
       name,
       complete: false,
@@ -141,7 +140,8 @@ function addGoal() {
   const name = input.value;
   input.value = "";
 
-  store.dispatch(
+  checkAndDispatch(
+    store,
     addGoalAction({
       name,
       id: generateId()
@@ -180,7 +180,7 @@ function addTodoToDOM(todo) {
   //line trough styling and event listener when we click on "li" element
   node.style.textDecoration = todo.complete ? "line-through" : "none";
   node.addEventListener("click", () => {
-    store.dispatch(toggleTodoAction(todo.id));
+    checkAndDispatch(store, toggleTodoAction(todo.id));
   });
 
   document.getElementById("todos").appendChild(node);
