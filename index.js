@@ -80,6 +80,27 @@ function goals(state = [], action) {
   }
 }
 
+// Redux Middleware _____________________________
+function checkAndDispatch(store, action) {
+  if (
+    action.type === ADD_TODO &&
+    action.todo.name.tolowerCase().includes("bitcoin")
+  ) {
+    return alert("Nope. That is a bad idea.");
+  }
+
+  if (
+    action.type === ADD_GOAL &&
+    action.goal.name.tolowerCase().includes("bitcoin")
+  ) {
+    return alert("Nope. That is a bad idea.");
+  }
+
+  return store.dispatch(action);
+}
+
+//____________________________________________________
+
 const store = Redux.createStore(
   Redux.combineReducers({
     todos,
@@ -148,7 +169,7 @@ function addTodoToDOM(todo) {
 
   // we call a createRemoveButton
   const removeBtn = createRemoveButton(() => {
-    store.dispatch(removeTodoAction(todo.id));
+    checkAndDispatch(store, removeTodoAction(todo.id));
   });
 
   // append the text to "li" element
@@ -171,7 +192,7 @@ function addGoalToDOM(goal) {
   const text = document.createTextNode(goal.name);
 
   const removeBtn = createRemoveButton(() => {
-    store.dispatch(removeGoalAction(goal.id));
+    checkAndDispatch(store, removeGoalAction(goal.id));
   });
 
   node.appendChild(text);

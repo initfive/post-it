@@ -1,8 +1,10 @@
 ## Post-it App
 
-Small planing App created while working trough Udacity React | Redux | React Native Nanodegree
+Small planing App created with Redux and vanilla JavaScript.
 
-## 🗂 Provided Assets
+Created as a part of Udacity React | Redux | React Native Nanodegree
+
+## Provided Assets
 
 Clone or download Contacts Project folder
 
