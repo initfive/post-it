@@ -1,6 +1,6 @@
 ## Post-it App
 
-Small planing App created with Redux and vanilla JavaScript.
+Small planing App created with React and Redux.
 
 Created as a part of Udacity React | Redux | React Native Nanodegree
 
